@@ -103,7 +103,12 @@ public with sharing class HomeChildKanbanCls {
     @AuraEnabled
     public static List<HomeChildKanbanObjUtil> getPickVals(String FldName, String objName){
         List<HomeChildKanbanObjUtil> plist = new List<HomeChildKanbanObjUtil>();
-        Schema.DescribeFieldResult fieldResult = Schema.getGlobalDescribe().get(objName).getDescribe().fields.getMap().get(FldName).getDescribe();
+        // filter if objName is Case
+        if(objName == 'Case'){
+            Schema.DescribeFieldResult fieldResult = Schema.getGlobalDescribe().get(objName).getRecordTypeInfosByName().get('Ticket').getDescribe().fields.getMap().get(FldName).getDescribe();
+        } else {
+            Schema.DescribeFieldResult fieldResult = Schema.getGlobalDescribe().get(objName).getDescribe().fields.getMap().get(FldName).getDescribe();
+        }
         List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
         for( Schema.PicklistEntry f : ple)
         {
